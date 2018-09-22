@@ -33,7 +33,7 @@ namespace OrganizacaoTrabalho1
             //{
             //}
 
-            //registryManager.ReadAndWriteRegistries();
+            //registryManager.WriteRegistries();
         }
     }
 }

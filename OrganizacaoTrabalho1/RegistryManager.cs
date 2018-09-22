@@ -9,7 +9,6 @@ namespace OrganizacaoTrabalho1
     {
         private readonly string _registryFile;
         private readonly string _indexFile;
-        private const int _bufferSize = 128;
         private const int _dataRegistrySize = 22;
         private const int _indexRegistrySize = 8;
 
@@ -32,8 +31,7 @@ namespace OrganizacaoTrabalho1
 
         public void WriteRegistries()
         {
-            using (var fileStream = File.OpenRead(_registryFile))
-            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, _bufferSize))
+            using (var streamReader = new StreamReader(_registryFile))
             {
                 string line;
                 while ((line = streamReader.ReadLine()) != null)
@@ -99,7 +97,7 @@ namespace OrganizacaoTrabalho1
             if (indexRegistry == null)
                 return null;
 
-            using (var dataStreamReader = new StreamReader(_registryFile, Encoding.UTF8, false, _bufferSize))
+            using (var dataStreamReader = new StreamReader(_registryFile))
             {
                 dataStreamReader.BaseStream.Seek((indexRegistry.DataIndex - 1) * _dataRegistrySize, SeekOrigin.Begin);
 
