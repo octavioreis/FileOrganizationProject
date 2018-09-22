@@ -12,7 +12,7 @@ namespace OrganizacaoTrabalho1
         {
             var registryManager = new RegistryManager(@"..\..\registros.txt", @"..\..\indice.txt");
 
-            //var teste = registryManager.FetchRegistry(1600);
+            //var teste = registryManager.FetchRegistry(2000);
 
             //registryManager.ReadAndWriteRegistries();
         }
