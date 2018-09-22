@@ -2,7 +2,7 @@
 
 namespace OrganizacaoTrabalho1
 {
-    public class RegistrySerializer
+    public static class RegistrySerializer
     {
         public static DataRegistry DeserializeDataRegistry(string registryString)
         {

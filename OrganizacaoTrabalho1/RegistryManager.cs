@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OrganizacaoTrabalho1
 {
-    public class RegistryManager
+    public sealed class RegistryManager
     {
         private readonly string _registryFile;
         private readonly string _indexFile;
@@ -43,6 +43,37 @@ namespace OrganizacaoTrabalho1
             }
         }
 
+        private static T BinarySearch<T>(
+            FileStream stream,
+            int id,
+            int min,
+            int max,
+            int registrySize,
+            Func<string, T> deserializer) where T : class, IRegistry
+        {
+            if (min > max)
+                return null;
+
+            var middle = (min + max) / 2;
+
+            stream.Seek(middle * registrySize, SeekOrigin.Begin);
+
+            var registry = deserializer(new StreamReader(stream).ReadLine());
+
+            if (registry.Id == id)
+            {
+                return registry;
+            }
+            else if (id < registry.Id)
+            {
+                return BinarySearch(stream, id, min, middle - 1, registrySize, deserializer);
+            }
+            else
+            {
+                return BinarySearch(stream, id, middle + 1, max, registrySize, deserializer);
+            }
+        }
+
         private static void WriteRegistry(DataRegistry registry)
         {
             Console.WriteLine($"Numero: {registry.Id} Nome: {registry.Name} Idade: {registry.Age} Salario: {registry.Salary}");
@@ -52,7 +83,7 @@ namespace OrganizacaoTrabalho1
         {
             using (var stream = File.OpenRead(_registryFile))
             {
-                return (DataRegistry)BinarySearch(stream, id, 0, (int)stream.Length / _dataRegistrySize, _dataRegistrySize, RegistrySerializer.DeserializeDataRegistry);
+                return BinarySearch(stream, id, 0, (int)stream.Length / _dataRegistrySize, _dataRegistrySize, RegistrySerializer.DeserializeDataRegistry);
             }
         }
 
@@ -62,7 +93,7 @@ namespace OrganizacaoTrabalho1
 
             using (var stream = File.OpenRead(_indexFile))
             {
-                indexRegistry = (IndexRegistry)BinarySearch(stream, id, 0, (int)stream.Length / _indexRegistrySize, _indexRegistrySize, RegistrySerializer.DeserializeIndexRegistry);
+                indexRegistry = BinarySearch(stream, id, 0, (int)stream.Length / _indexRegistrySize, _indexRegistrySize, RegistrySerializer.DeserializeIndexRegistry);
             }
 
             if (indexRegistry == null)
@@ -74,33 +105,6 @@ namespace OrganizacaoTrabalho1
 
                 return RegistrySerializer.DeserializeDataRegistry(dataStreamReader.ReadLine());
             }
-        }
-
-        private IRegistry BinarySearch(FileStream stream, int id, int min, int max, int registrySize, Func<string, IRegistry> deserializer)
-        {
-            if (min <= max)
-            {
-                var middle = (min + max) / 2;
-
-                stream.Seek(middle * registrySize, SeekOrigin.Begin);
-
-                var registry = deserializer(new StreamReader(stream).ReadLine());
-
-                if (registry.Id == id)
-                {
-                    return registry;
-                }
-                else if (id < registry.Id)
-                {
-                    return BinarySearch(stream, id, min, middle - 1, registrySize, deserializer);
-                }
-                else
-                {
-                    return BinarySearch(stream, id, middle + 1, max, registrySize, deserializer);
-                }
-            }
-
-            return null;
         }
     }
 }
