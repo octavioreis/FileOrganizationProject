@@ -50,9 +50,9 @@ namespace OrganizacaoTrabalho1
 
         private DataRegistry BinarySearchInDataFile(int id)
         {
-            using (var streamReader = new StreamReader(_registryFile, Encoding.UTF8, false, _bufferSize))
+            using (var stream = File.OpenRead(_registryFile))
             {
-                return BinarySearchInDataFile(streamReader, id, 0, (int)streamReader.BaseStream.Length / _dataRegistrySize);
+                return (DataRegistry)BinarySearch(stream, id, 0, (int)stream.Length / _dataRegistrySize, _dataRegistrySize, RegistrySerializer.DeserializeDataRegistry);
             }
         }
 
@@ -60,9 +60,9 @@ namespace OrganizacaoTrabalho1
         {
             IndexRegistry indexRegistry = null;
 
-            using (var indexStreamReader = new StreamReader(_indexFile, Encoding.UTF8, false, _bufferSize))
+            using (var stream = File.OpenRead(_indexFile))
             {
-                indexRegistry = BinarySearchInIndexFile(indexStreamReader, id, 0, (int)indexStreamReader.BaseStream.Length / _indexRegistrySize);
+                indexRegistry = (IndexRegistry)BinarySearch(stream, id, 0, (int)stream.Length / _indexRegistrySize, _indexRegistrySize, RegistrySerializer.DeserializeIndexRegistry);
             }
 
             if (indexRegistry == null)
@@ -76,15 +76,15 @@ namespace OrganizacaoTrabalho1
             }
         }
 
-        private DataRegistry BinarySearchInDataFile(StreamReader streamReader, int id, int min, int max)
+        private IRegistry BinarySearch(FileStream stream, int id, int min, int max, int registrySize, Func<string, IRegistry> deserializer)
         {
             if (min <= max)
             {
                 var middle = (min + max) / 2;
 
-                streamReader.BaseStream.Seek(middle * _dataRegistrySize, SeekOrigin.Begin);
+                stream.Seek(middle * registrySize, SeekOrigin.Begin);
 
-                var registry = RegistrySerializer.DeserializeDataRegistry(new StreamReader(streamReader.BaseStream).ReadLine());
+                var registry = deserializer(new StreamReader(stream).ReadLine());
 
                 if (registry.Id == id)
                 {
@@ -92,38 +92,11 @@ namespace OrganizacaoTrabalho1
                 }
                 else if (id < registry.Id)
                 {
-                    return BinarySearchInDataFile(streamReader, id, min, middle - 1);
+                    return BinarySearch(stream, id, min, middle - 1, registrySize, deserializer);
                 }
                 else
                 {
-                    return BinarySearchInDataFile(streamReader, id, middle + 1, max);
-                }
-            }
-
-            return null;
-        }
-
-        private IndexRegistry BinarySearchInIndexFile(StreamReader streamReader, int id, int min, int max)
-        {
-            if (min <= max)
-            {
-                var middle = (min + max) / 2;
-
-                streamReader.BaseStream.Seek(middle * _indexRegistrySize, SeekOrigin.Begin);
-
-                var registry = RegistrySerializer.DeserializeIndexRegistry(new StreamReader(streamReader.BaseStream).ReadLine());
-
-                if (registry.Id == id)
-                {
-                    return registry;
-                }
-                else if (id < registry.Id)
-                {
-                    return BinarySearchInIndexFile(streamReader, id, min, middle - 1);
-                }
-                else
-                {
-                    return BinarySearchInIndexFile(streamReader, id, middle + 1, max);
+                    return BinarySearch(stream, id, middle + 1, max, registrySize, deserializer);
                 }
             }
 
