@@ -1,0 +1,17 @@
+1000Ademar   25500  
+1050Afonso   27700  
+1075Angela   22600  
+1100Antônio  28850 
+1300Carlos   23750  
+1350Cesaar   55900  
+1400Claudia  25800  
+1440Cristiano301000 
+1480Darci    20750  
+1600Diogo    26600  
+1700Edson    35500  
+1800Eder     26550  
+1850Elias    32650  
+1900Flavio   28780  
+1950Gerson   39700  
+1975Geraldo  342500 
+2000Helena   42500  
