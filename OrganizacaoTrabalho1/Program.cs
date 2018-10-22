@@ -28,43 +28,32 @@ namespace OrganizacaoTrabalho1
 
         private static void Testar(AbstractRegistryManager registryManager)
         {
-            IRegistry registro;
-            int idRegistro;
-            if ((registro = registryManager.FetchRegistry(idRegistro = 1000)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1050)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1075)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1100)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1300)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1350)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1400)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1440)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1480)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1600)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1700)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1800)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1850)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1900)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1950)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 1975)) == null ||
-                registro.Id != idRegistro ||
-                (registro = registryManager.FetchRegistry(idRegistro = 2000)) == null)
+            var ids = new int[]
             {
-                throw new Exception();
+                1000,
+                1050,
+                1075,
+                1100,
+                1300,
+                1350,
+                1400,
+                1440,
+                1480,
+                1600,
+                1700,
+                1800,
+                1850,
+                1900,
+                1950,
+                1975,
+                2000
+            };
+
+            foreach (var id in ids)
+            {
+                var registro = registryManager.FetchRegistry(id);
+                if (registro == null || registro.Id != id)
+                    throw new Exception();
             }
         }
     }
