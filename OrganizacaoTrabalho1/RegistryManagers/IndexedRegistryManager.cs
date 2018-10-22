@@ -3,42 +3,26 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace OrganizacaoTrabalho1
+namespace OrganizacaoTrabalho1.RegistryManagers
 {
-    public sealed class RegistryManager
+    public sealed class IndexedRegistryManager : AbstractRegistryManager
     {
-        private readonly string _registryFile;
-        private readonly string _indexFile;
         private const int _dataRegistrySize = 22;
         private const int _indexRegistrySize = 8;
 
-        public RegistryManager(string registryFile, string indexFile)
-        {
-            if (!File.Exists(registryFile))
-                throw new IOException($"Invalid '{nameof(registryFile)}'.");
+        public string IndexFile { get; }
 
+        public IndexedRegistryManager(string registryFile, string indexFile) : base(registryFile)
+        {
             if (!File.Exists(indexFile))
                 throw new IOException($"Invalid '{nameof(indexFile)}'.");
 
-            _registryFile = registryFile;
-            _indexFile = indexFile;
+            IndexFile = indexFile;
         }
 
-        public DataRegistry FetchRegistry(int registryNumber)
+        public override DataRegistry FetchRegistry(int registryNumber)
         {
             return BinarySearchInIndexFile(registryNumber);
-        }
-
-        public void WriteRegistries()
-        {
-            using (var streamReader = new StreamReader(_registryFile))
-            {
-                string line;
-                while ((line = streamReader.ReadLine()) != null)
-                {
-                    WriteRegistry(RegistrySerializer.DeserializeDataRegistry(line));
-                }
-            }
         }
 
         private static T BinarySearch<T>(
@@ -72,14 +56,9 @@ namespace OrganizacaoTrabalho1
             }
         }
 
-        private static void WriteRegistry(DataRegistry registry)
-        {
-            Console.WriteLine($"Numero: {registry.Id} Nome: {registry.Name} Idade: {registry.Age} Salario: {registry.Salary}");
-        }
-
         private DataRegistry BinarySearchInDataFile(int id)
         {
-            using (var stream = File.OpenRead(_registryFile))
+            using (var stream = File.OpenRead(base.RegistryFile))
             {
                 return BinarySearch(stream, id, 0, (int)stream.Length / _dataRegistrySize, _dataRegistrySize, RegistrySerializer.DeserializeDataRegistry);
             }
@@ -89,7 +68,7 @@ namespace OrganizacaoTrabalho1
         {
             IndexRegistry indexRegistry = null;
 
-            using (var stream = File.OpenRead(_indexFile))
+            using (var stream = File.OpenRead(IndexFile))
             {
                 indexRegistry = BinarySearch(stream, id, 0, (int)stream.Length / _indexRegistrySize, _indexRegistrySize, RegistrySerializer.DeserializeIndexRegistry);
             }
@@ -97,7 +76,7 @@ namespace OrganizacaoTrabalho1
             if (indexRegistry == null)
                 return null;
 
-            using (var dataStreamReader = new StreamReader(_registryFile))
+            using (var dataStreamReader = new StreamReader(base.RegistryFile))
             {
                 dataStreamReader.BaseStream.Seek((indexRegistry.DataIndex - 1) * _dataRegistrySize, SeekOrigin.Begin);
 
