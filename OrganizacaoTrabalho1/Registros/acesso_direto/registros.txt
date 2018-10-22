@@ -1,17 +1,10 @@
-1900Flavio   28780  
-1075Angela   22600  
-1300Carlos   23750  
-1400Claudia  25800  
-1480Darci    20750  
-1050Afonso   27700  
-1440Cristiano301000 
-1350Cesaar   55900  
-2000Helena   42500  
-1950Gerson   39700  
-1700Edson    35500  
-1800Eder     26550  
-1600Diogo    26600  
-1850Elias    32650  
-1100Antônio  28850 
-1975Geraldo  342500 
-1000Ademar   25500  
+1000Ademar   25500 1 
+1100Antônio  28850  
+
+1300Carlos   23750 3 
+1400Claudia  25800   
+
+1600Diogo    26600   
+1700Edson    35500   
+1800Eder     26550 6 
+1900Flavio   28780   

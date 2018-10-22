@@ -23,7 +23,7 @@ namespace OrganizacaoTrabalho1.RegistryManagers
             using (var streamReader = new StreamReader(RegistryFile))
             {
                 string line;
-                while ((line = streamReader.ReadLine()) != null)
+                while (!string.IsNullOrWhiteSpace(line = streamReader.ReadLine()))
                 {
                     WriteRegistry(RegistrySerializer.DeserializeDataRegistry(line));
                 }

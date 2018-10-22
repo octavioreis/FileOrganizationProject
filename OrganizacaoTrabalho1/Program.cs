@@ -17,13 +17,17 @@ namespace OrganizacaoTrabalho1
         private const string _indiceArquivosIndexado = @"..\..\Registros\arquivos_indexado\indice.txt";
 
         private const string _registrosAcessoDireto = @"..\..\Registros\acesso_direto\registros.txt";
+        private const string _areaExtensaoAcessoDireto = @"..\..\Registros\acesso_direto\area_extensao.txt";
 
         static void Main(string[] args)
         {
-            //var registryManager = new IndexedRegistryManager(_registrosSequencialIndexado, _indiceSequencialIndexado);
-            var registryManager = new IndexedRegistryManager(_registrosArquivosIndexado, _indiceArquivosIndexado);
+            var sequencialRegistryManager = new IndexedRegistryManager(_registrosSequencialIndexado, _indiceSequencialIndexado);
+            var indexedFilesRegistryManager = new IndexedRegistryManager(_registrosArquivosIndexado, _indiceArquivosIndexado);
+            var directAccessRegistryManager = new DirectAccessRegistryManager(_registrosAcessoDireto, _areaExtensaoAcessoDireto);
 
-            Testar(registryManager);
+            Testar(sequencialRegistryManager);
+            Testar(indexedFilesRegistryManager);
+            Testar(directAccessRegistryManager);
         }
 
         private static void Testar(AbstractRegistryManager registryManager)
